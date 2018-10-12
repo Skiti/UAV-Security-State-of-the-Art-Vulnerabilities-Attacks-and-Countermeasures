@@ -1,0 +1,410 @@
+\documentclass[journal]{IEEEtran}
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  % \usepackage[pdftex]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  % \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../eps/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.eps}
+\fi
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. graphicx.sty is already
+% installed on most LaTeX systems. The latest version and documentation
+% can be obtained at: 
+% http://www.ctan.org/tex-archive/macros/latex/required/graphics/
+% Another good source of documentation is "Using Imported Graphics in
+% LaTeX2e" by Keith Reckdahl which can be found at:
+% http://www.ctan.org/tex-archive/info/epslatex/
+%
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+
+\title{UAV Security: State-of-the-Art, Vulnerabilities, Attacks and Countermeasures}
+
+\author{Marco~Casagrande
+\thanks{Marco Casagrande is a student attending Master's degree of Computer Science at Padua University, Italy. E-mail: marco.casagrande.5@studenti.unipd.it}
+\thanks{Essay released on February 9, 2018}}
+
+
+\markboth{Computer and Network Security, Master's degree, Padua University, 09/02/2018}
+{Casagrande - UAV Security: State-of-the-Art, Vulnerabilities, Attacks and Countermeasures}
+
+\maketitle
+
+\begin{abstract}
+This paper wants to outline and summarize the current state-of-the-art regarding UAV security. Civilian/amateur UAVs (small UAVs) will be the main targets. This is motivated by the ever-growing market share represented by this technology. A silent but crucial revolution is currently taking place: drones are becoming more and more affordable, with applications in a wide range of fields. Unfortunately, the security aspect was overlooked by manufacturers, dismissing potential threats and considering small UAVs mere toys. To prove once again the importance of drone security, vulnerabilities and real-world examples of dangerous attacks are showed. Possible countermeasures are also described and evaluated.
+\end{abstract}
+
+\begin{IEEEkeywords}
+UAVs; drones; security; networks; UAV accidents; GPS jamming; GPS spoofing; sniffing; deauthentication; hijacking.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+
+\IEEEPARstart{W}{e} are approaching an era dominated by UAV technology. Governments, military and public organizations, enterprises and researchers have already realized this and are preparing for the upcoming technological revolution. USA government heavily pushed FAA (Federal Aviation Administration \cite{faa}) into releasing at the end of 2015 detailed regulations about usage and registration of civilian UAVs (from now on called small UAVs). Official FAA Aviation Forecast \cite{faaforecast} registers 1.142 millions of sUAS (small Unmanned Aircraft Systems) units in 2016 and predicts 3.972 millions in 2021 (mixing together hobbyist and commercial fleets). Both Google (Project Wing \cite{pwing}) and Amazon (Prime Air \cite{primeair}) are working on drone delivery systems. Countless researchers contributed to literature studying UAV networks, swarms, fields of application, performance, unique challenges and constraints. Warnings about drone vulnerabilities were disregarded by manufacturers: they did not consider security as a real concern. The importance of UAV security was highlighted in some accidents occurred during warfare in Iraq, Iran and Ukraine. Still, no concrete improvement has been made yet to enhance small drone security (no sources available concerning military drones).
+
+This paper contribution to the state-of-the-art is providing a readable document depicting the current state of UAV security. The rest of the paper is organized as follows. An overview of related works (notorious accidents and research papers) will be presented in section II. Section III determines UAV security panorama, highlighting its unique challenges and constraints. Section IV addresses UAV security vulnerabilities. Section V explores common attacks and proposed countermeasures. A brief summary and the conclusion is found in section VI.
+ 
+\hfill February 9, 2018
+
+\section{Related works}
+
+\subsection{Notorious accidents}
+
+On December 2009, USA soldiers found intercepted footage of American video recording drones on devices owned by Shiiti fighters in Iraq \cite{iraqaccident}. A cheap program called SkyGrabber was used. On December 2011, Iranian forces captured an American Lockheed Martin RQ-17 drone \cite{lockheedaccident}. On December 2012, Iranian forces captured an American ScanEagle drone and one year later were able to mass product it, showing proof to Russia \cite{scaneagleaccident}. The true circumstances of those attacks was never confirmed (due to political arm wrestling), but exploits of some cyber-security breaches are quite likely. The aforementioned accidents showed vulnerabilities on military UAVs.
+
+The conflict between Ukraine and Russia (2014-present) is the most prolific case study for drone technology applications. UAVs are very proficient in delivering, scouting, search and rescue, surveillance, tracking and several other tasks. Ukraine was not prepared for such high technology warfare and started recruiting civilian drones. Since they had no security features, Russia soon developed effective countermeasures. Still, Russia had to spend millions to counter cheap UAVs. This particular episode brought attention to the unexpected threat represented by small drones and their lack of security features.
+
+\subsection{Research papers}
+
+In \cite{uavvulnerabilitiesreview} a review of UAV security attacks was conducted, enumerating concrete examples and simulations to formulate a coherent taxonomy. Specific attacks were addressed to correctly categorize them. Another taxonomy was proposed in \cite{publicsafetynetworksecurity}, instantiated to drone-assisted public safety networks. GPS spoofing and Wi-Fi attacks were specifically investigated, tackling encryption and trust establishment issues.
+\\
+In \cite{smartcitiesdronesecurity} four popular small UAV models were reviewed considering Wi-Fi communication capabilities and security vulnerabilities. All four models shared similar security issues at the most basic level. The technique exposed in \cite{accessvulnerabilities} for hijacking Wi-Fi sessions and executing man-in-the-middle attacks exploited the exact same issues. Small UAV hijacking was also achieved in \cite{anatomyspoofing} through GPS signal manipulation. In \cite{gpshijackingdetection} an hijacking detection system using on-board sensors was proposed, while in \cite{encryptedchannel} the hijacking detection system was part of a middleware solution using a secondary encrypted communication channel.
+\\
+In \cite{powercryptoprocessors} UAV security requirements were defined and the hardware prototype of a secure remote-controlled flying platform (CMD) was exhibited. The key feature was adding to a standard CMD architecture a cryptographic engine.
+\\
+In \cite{dosardrone} reconnaissance and denial-of-service attacks on the popular Parrot AR.Drone 2.0 \cite{ardrone} were addressed. Another model, a Parrot Bebop Drone \cite{bebop} was tested against denial-of-service, buffer-overflow and ARP Cache Poisoning attacks in \cite{uavcommonsecurityattacks}.
+\\
+In \cite{exploringuavvulnerabilities} the wireless link (low range, connecting UAV to manual remote control) and the telemetry link (long range, connecting UAV to flight planning software) were successfully exploited. Additionally, a man-in-the-middle attack was conjured thanks to reverse engineering. The implementation of encryption techniques was the only declared countermeasure.
+\\
+In \cite{skynet} the realization of a botnet controlled by a stealth flying network was demonstrated. Local wireless networks were surveyed, locating possible targets. WEP and WPA encrypted networks were cracked through Amazon's cloud computing. This new type of botnet evaded traditional networks security mechanisms and was really difficult to physically spot.
+
+
+\section{UAV security overview}
+
+\subsection{Information security principles}
+
+Computer security is strictly linked to information security, due to its core nature: data. UAVs are resource-constrained devices usually deployed for data gathering missions, making them premium targets of malicious attackers. As a defending mechanism, information security principles should be applied to drones. The three core properties should be achieved:
+\begin{itemize}
+\item confidentiality, as the prevention of unauthorized access to data;
+\item integrity, as the detection of unauthorized access to data and the prevention of unauthorized modification to data;
+\item availability, as the capability to correctly function at all times.
+\end{itemize}
+Privacy, authenticity, accountability, non-repudiation and reliability are additional properties that UAV security might aim to achieve, depending on specific requirements.
+
+\subsection{UAV variety}
+UAVs can be divided into the military or the small/hobbyist/commercial category. Due to classified records, detailed specifics of the former are not disclosed. Military drones can be sizeable, heavy and complex. They guarantee some degree of security but can still be breached by government-founded hacking departments (or physically captured). They arguably use encryption and communicate through secure wireless channels. Small UAVs are lightweight, limited in size and computational power. Components are optimized, every component at their disposal works at almost full capability. Due to heavy constraints upon resources, adding functionalities requires trade-offs. Cost is very relevant so manufacturers sacrifice completely the security aspect. Wireless communications are not secure and encryption is nonexistent. Both military and small drones are prone to attacks: the former are more secure but exposed to advanced threats, the latter sport more vulnerabilities but are not involved in dangerous activities.
+
+Small UAVs come in different models by different manufacturers. \cite{smartcitiesdronesecurity} analyzed four popular models: Parrot AR.Drone 2.0 \cite{ardrone}, Parrot Bebop Drone \cite{bebop}, DJI Phantom 2 Vision Drone \cite{phantomvision} and 3D Robotics Solo Drone \cite{solodrone}. These models were produced by three distinct manufacturers, were commonly used for both hobbyist and commercial tasks and shared almost the same security issues. Their Wi-Fi network was easily identifiable (same name as the model plus some numbers) and also lacking password protection (Solo Drone excluded). These UAVs exposed open networking ports (Telnet, FTP) linked to a predictable internal IP address as showed in \cite{dosardrone} too. Deauthentication and GPS spoofing attacks were successfully performed using Wi-Fi Pineapple \cite{wifipineapple}. A drone mounting this device executed signal sniffing and enslaved other small UAVs with ease.
+
+\subsection{Challenges and constraints}
+
+Constraints on small UAVs are:
+\begin{itemize}
+\item energy;
+\item computational power;
+\item memory;
+\item weight;
+\item size;
+\item cost.
+\end{itemize}
+Adding a new feature to drones always requires a proportional trade-off. After evaluating if a feature is worthwhile, the real challenge is maximizing utility while minimizing allocated resources. Security impacts negatively other resources but needs to be guaranteed to a basic degree.
+
+UAV networks add another layer of complexity to the security aspect. The implementation of proper communication protocols is needed: wireless is not secure by design and lack of encryption is an huge obstacle. A new consideration is that drones may exchange messages with other drones, ground stations or any compatible devices. New scenarios where adversaries compromises weak parts of the network have to be addressed.
+
+Drone swarms are arguably the next step after UAV networks. Literature  about them is particularly rich but current real-world implementations are disappointing and further research is needed. For this reason, drone swarm security will not be addressed in this paper.
+
+\section{UAV security vulnerabilities}
+
+\subsubsection{Open ports}
+Many UAVs sport open ports, usually offering data streaming services connected to a tablet or a machine. Open ports can be common ones like FTP and Telnet or bound to proprietary softwares. As demonstrated in \cite{dosardrone}, an adversary could crash a drone by using Poweroff Application accessing to Telnet port 23.
+
+Open ports vulnerabilities are usually caused by human oversights and can be swiftly resolved. Exceptions should be addressed on a case-by-case basis.
+
+\subsubsection{Encryption}
+Encryption is integral to security: confidentiality is reliant on encrypted messages, also benefiting massively integrity and authenticity. Encryption should be applied extensively in UAV security: a single vulnerability will compromise the whole system. Communication and data links are premium targets for malicious attackers.
+
+\cite{publicsafetynetworksecurity} encouraged the adoption of WPA2 encryption on Wi-Fi links and attribute-based encryption (EBA) on scalable drone-assisted public safety networks. Data stream interception violates privacy and should not be overlooked on small UAVs.
+
+No encryption mechanisms are available on small drones nowadays. Lightweight algorithms are being developed but constraints are too strict. Authentication drastically improves security but encrypted channels are core elements. An example is \cite{encryptedchannel} a communication protocol and UAV authentication system design proposal. A Raspberry Pi acted as a middleware solution, communicating with the ground station on a secondary channel. The results demonstrated a proof of applicability on commercial drones, although with ten seconds delay. A cryptographic engine was developed in \cite{powercryptoprocessors} to serve the control data receiver and a video streamer. Comparing starting software and final hardware solution, the system gained better security and performance. Unfortunately, the cost of encryption was overshadowed by hardware optimization.
+
+Modern technology is unable to provide an high security level while maintaining comparable performance. Dedicated hardware solutions can yield good results but are situational.
+
+\subsubsection{GPS}
+Global Positioning System (GPS) is global public service for geolocalization. It is the easiest method to track drones and plan automated flights. Military GPS utilizes M-code signals, secure by design and particularly resilient against jamming. Civilian signals are public and can be captured by any GPS receiver, an ubiquitous device in UAVs. \cite{uavvulnerabilitiesreview} \cite{publicsafetynetworksecurity} \cite{smartcitiesdronesecurity}  \cite{anatomyspoofing} \cite{gpshijackingdetection} \cite{uavexploitation} investigated GPS vulnerabilities as drone security vulnerabilities. 
+
+GPS signal encryption is the only practical solution, although costly and not entirely effective.
+
+\subsubsection{Communication links}
+UAV communication links are usually a Wi-Fi link and a potential range extender (such as telemetry link). Literature shows a wide range of Wi-Fi vulnerabilities and they can be exploited to attack drones. 
+
+The technique used to breach weak wireless access points of \cite{accessvulnerabilities} was particularly effective on drones, for their lack of security measures. A drone mounting a Raspberry Pi \cite{raspberrypi}, acted as a rogue access point and a monitoring wireless interface. Whenever an UAV network was found, the rogue AP would change its ESSID to that while sending deauthentication frames to the UAV. If the rogue AP had a stronger signal, the drone would automatically connect to it, falling under control of the attacker.
+
+\cite{exploringuavvulnerabilities} exposed a vulnerability on the telemetry link of a commercial drone. An XBee 868L chip extended the range of a tablet with the flight planning software. Most of the parameters needed to connect to the XBee 868L chip were default settings and the two missing ones could be retrieved through broadcasting a message and looking for the acknowledgement. Tablet Wi-Fi link could also be cracked in mere minutes, since it used Wired Equivalent Privacy (WEP).
+
+Communication links are usually caused by human oversights and security principles unawareness but solutions might not be trivial. Exceptions should be addressed on a case-by-case basis.
+
+\subsubsection{Physical threats}
+Physical threats are often linked to other security vulnerabilities, commonly GPS-related. Drones are forced to take certain paths (GPS spoofing) or to land (GPS jamming, deauthentication) and are subsequently stolen. More direct approaches involve firing UAVs down with weapons (guns, artillery, lasers \cite{navylaser}), capturing them with special nets \cite{dronenet} o even with trained eagles \cite{droneeagles}.
+
+Fixing other vulnerabilities will reduce the risk of physical threats. Direct approaches are outside the scope of this paper but should be addressed on a case-by-case basis.
+
+\section{UAV security attacks}
+
+\subsubsection{Sniffing}
+A sniffing attack means that an adversary intercepts and logs network traffic of the target.
+
+Communications between the pilot and small drones happen publicly, as they are wireless. To exacerbate the issue, no encrypted or secure channels are used. Sniffing attacks on drones are trivial as security is completely absent.
+
+The consequences of such an attack on small UAVs can be eavesdropping (possible reconnaissance and replay attacks) and reverse engineering.
+
+Almost any attack takes advantage of reconnaissance from sniffing, being so effortless to perform. Several tools \cite{wifipineapple} \cite{snoopy} \cite{aircrackng} \cite{skyjack} implemented sniffing capabilities. \cite{smartcitiesdronesecurity} serves as an example of a signal sniffing attack, through a Wi-Fi Pineapple \cite{wifipineapple} mounted on a drone.
+
+\subsubsection{Replay}
+A replay attack means that an adversary intercepts a valid data transmission to the target and later resends it one or multiple times, trying to fake a new valid transmission.
+
+Replay attacks on small UAVs require a little more effort than sniffing attacks. Drone networks do not posses authentication protocols, so adversaries can send replay of messages via broadcast or direct connection (exploiting communication links vulnerabilities).
+
+The consequences of such an attack on small UAVs can be reverse engineering, deauthentication, denial-of-service, data tampering, hijacking and system halting.
+
+In \cite{publicsafetynetworksecurity} Address Resolution Protocol (ARP) requests are replayed, enabling sufficient acquisition of information about the encryption key to crack it (WEP/WPA protocols).
+
+In \cite{uavvulnerabilitiesreview} a video replay attack is described, replaying past video feed to an operator's display instead of live feed, causing data tampering and denial-of-service.
+
+\subsubsection{Denial-of-service}
+A denial-of-service attack means that an adversary floods the target with requests, overloading its resources to disrupt availability.
+
+Before starting, a denial-of-service attack must find an entry point; a trivial task since drone wireless access points are extremely easy to infiltrate (open or protected by WEP). 
+
+The consequences of such an attack on small UAVs can be battery depletion, input delay, poor software performance and system halting.
+
+In \cite{dosardrone} three different automatic tools were used for a denial-of-service attack: Low Orbit Ion Cannon \cite{loic}, Netwox \cite{netwox} and Hping3 \cite{hping3}. The consequences were increased latency and poor video streaming quality.
+
+In \cite{uavcommonsecurityattacks} the proposed countermeasure against denial-of-service attacks was the implementation of a watchdog timer.  Non-navigational processes had low priority in the scheduler and could access the CPU only for a chosen amount of time.
+
+\subsubsection{Deauthentication}
+A deauthentication attack means that an adversary repeatedly sends deauthentication frames to the target, causing it to temporarily disconnect from its network. Deauthentication frames are specific to Wi-Fi protocol.
+
+Deauthentication attacks on small UAVs are usually employed in forcing a connection to rogue access points, after the artificial temporary disconnection. Aircrack-ng \cite{aircrackng} features deauthentication attacks.
+
+The consequences of such an attack on small UAVs can be battery depletion, temporary network disconnection (possible reconnection to a rogue access point) and denial-of-service.
+
+Examples of deauthentication attacks can be found in \cite{publicsafetynetworksecurity} \cite{smartcitiesdronesecurity}.
+
+\subsubsection{GPS jamming}
+A GPS jamming attack means that an adversary temporarily blocks GPS signals by sending more powerful signals in the same frequency.
+
+GPS jamming is really effective on drones because GPS is the best tracking tool available and every flight planning software relies on it. Without navigation instructions, small drones may land on the spot or crash on the ground. Military GPS signals are particularly resilient against GPS jamming.
+
+The consequences of such an attack on small UAVs can be denial-of-service, GPS spoofing and physical threats.
+
+In \cite{anatomyspoofing} GPS vulnerabilities were tackled, focusing on drone hijacking.
+
+\subsubsection{GPS spoofing}
+A GPS spoofing attack means that an adversary forges counterfeit GPS signals and sends them to the target as valid ones. GPS spoofing relies on GPS jamming to block valid signals before sending the counterfeited ones.
+
+GPS spoofing is really effective on small UAVs for the same reasons as GPS jamming. Public GPS is not designed to be secure because of its public nature. The only countermeasure to GPS spoofing is authentication, achievable through proper encryption. Without encryption, small drones will never be secure because of the GPS module. Military GPS signals are resilient against GPS spoofing.
+
+The consequences of such an attack on small UAVs can be hijacking and physical threats.
+
+In \cite{anatomyspoofing} techniques such as cryptographic authentication and GPS signal analysis (average strength, time interval, identification code monitoring) were proposed as countermeasures to GPS spoofing.
+
+In \cite{gpshijackingdetection} \cite{encryptedchannel} hijacking detection and recover techniques were formulated and tested.
+
+Additional GPS spoofing examples can be found in \cite{publicsafetynetworksecurity} \cite{smartcitiesdronesecurity}.
+
+\subsubsection{Man-in-the-middle}
+A man-in-the-middle attack means that an adversary is located between the endpoints of the target communication, reading and potentially altering any message exchanged.
+
+A man-in-the-middle attack can be performed on the Wi-Fi link between the pilot and the drone. The generic setup and execution is the following:
+\begin{itemize}
+\item information about active networks are gathered through wireless monitoring tools (aircrack-ng \cite{aircrackng}, Wi-Fi Pineapple \cite{wifipineapple});
+\item a rogue wireless access point is created, pretending to be the target UAV authentic AP;
+\item the target UAV authentic AP is flooded with deauthentication frames for some time;
+\item the target UAV connects to the rogue AP (stronger signal), believing it to be the authentic AP;
+\item the man-in-the-middle attack is successful and the target drone is under adversary's control.
+\end{itemize}
+
+The consequences of such an attack on small UAVs can be eavesdropping, data tampering and hijacking.
+
+In \cite{accessvulnerabilities} the man-in-the-middle attack was performed by a drone during flight, using a Raspberry Pi \cite{raspberrypi} as a payload device.
+
+In \cite{exploringuavvulnerabilities} a man-in-the-middle attack was conjured. Through reverse engineering, the flight software commands were bound to telemetry responses, enabling meaningful eavesdropping and injection of packets. Encryption on telemetry link was proposed as the only countermeasure.
+
+\subsubsection{Buffer-overflow}
+A buffer-overflow attack means that an adversary overruns a buffer boundary and overwrites adjacent memory locations with malicious intents.
+
+Standard buffer-overflow attacks do not work on drones because their control system is different from traditional machine architectures. Navigation-related processes have maximum priority and the system follows strict physical deadlines. If the control system follows Harvard architecture, data memory and code are physically separated and the program counter cannot point to addresses in data memory.
+
+The consequences of such an attack on small UAVs can be code injection (possible hijacking), data tampering and system halting.
+
+In \cite{uavcommonsecurityattacks} a buffer-overflow attack was achieved by sending JSON commands longer than a thousand characters, causing a Parrot Bebop Drone \cite{bebop} to crash. The proposed solution was hardline input data filtering, only accepting payload data not exceeding a chosen length value.
+
+In \cite{stealthyrop} an Ardupilot Mega 2.5 \cite{ardupilot} was targeted for a return oriented programming attack, under the assumption of a buffer-overflow vulnerability in the running code. The consequences were dire: a payload of any size (limited by internal memory) could be injected. No abnormal behaviour was registered and only two gadgets were necessary for this attack. The proposed solution was an hardware and software randomization technique called MAVR.
+
+\subsubsection{Botnet}
+A botnet is a group of compromised Internet-connected devices, under control of a single adversary. Orders to bots are sent through a Command and Control software. Botnet architecture is flexible to better avoid detection: two basic models are client-server and peer-to-peer.
+
+New types of botnets will emerge when drone networks start spreading. Traditional detection techniques are unable to detect constantly moving flying nodes. Additionally, identification and disruption of UAV bots is an entirely new challenge.
+
+Botnets can greatly improve the strength of other attacks and are notably responsible for distributed-denial-of-service.
+
+Attacks overtaking drone control can be found in \cite{uavvulnerabilitiesreview} \cite{publicsafetynetworksecurity} \cite{smartcitiesdronesecurity} \cite{accessvulnerabilities} \cite{exploringuavvulnerabilities} \cite{stealthyrop}. Related tools \cite{wifipineapple} \cite{aircrackng} \cite{skyjack} have been available for some years now.
+
+In \cite{skynet} the botnet exploited weak wireless networks and its botmaster was a small drone, flying around to relay messages. Countermeasures involved physical spotting and logging new wireless access points to monitor suspicious behaviour.
+
+\subsection{Related tools}
+
+\subsubsection{Snoopy}
+Snoopy \cite{snoopy} is a distributed tracking and profiling framework. The client software collects SSIDs from nearby wireless networks, counterfeits it and creates a similar rogue access point. The server software populates a database with gathered data. The web interface and Maltego transforms improve usability. The client software can easily be mounted on small UAVs.
+
+\subsubsection{Aircrack-ng suite}
+Aircrack-ng \cite{aircrackng} is a suite of tools for wireless security testing. It features monitoring, attacking, testing and cracking. The tools commonly used to test drone security are aircrack-ng, aireplay-ng, airmon-ng and airodump-ng. It is utilized on both Wi-Fi Pineapple and SkyJack tools.
+
+\subsubsection{Wi-Fi Pineapple}
+Wi-Fi Pineapple \cite{wifipineapple} is an auditing platform for monitoring wireless networks and conducting penetration tests. It is composed by PineAP, a software suite offering many tools. Being lightweight, small sized and having low requirements, it can easily be mounted on small UAVs. Wi-Fi Pineapple can perform reconnaissance, become a rogue wireless access point and act as a man-in-the-middle platform with logging capabilities.
+
+\subsubsection{SkyJack}
+SkyJack \cite{skyjack} is a drone engineered to automatically search, hack and wirelessly control other UAVs. Hardware-wise it is composed by a Parrot AR.Drone 2.0 \cite{ardrone}, a Raspberry Pi \cite{raspberrypi} an Alfa AWUS036H wireless transmitter and an USB battery. Software-wise it uses SkyJack Perl application, aircrack-ng \cite{aircrackng} and node-ar-drone \cite{nodeardrone}. SkyJack can be installed on any machine, without requiring an UAV.
+
+\section{Conclusion}
+In this paper, an analysis of UAV security state-of-the-art was assembled. Most recent and notorious accidents and research papers were presented. A brief overview of information security principles and drone technology was offered. Small UAV vulnerabilities were disclosed and motivated with examples. Basic small UAV attacks were enumerated and motivated with examples. Lastly, referenced security tools were described.
+
+This paper highlighted the lack of security on small UAVs finding unanimous proof about its initial claims. The future of drone technology cannot ignore security: threats are far too real and potentially devastating. Basic vulnerabilities needs to be promptly fixed and encryption needs to be implemented during the next years to come.
+
+
+\begin{thebibliography}{1}
+
+\bibitem{faa}
+Federal Aviation Administration (FAA). Online source available at: https://www.faa.gov
+
+\bibitem{faaforecast}
+Federal Aviation Administration, \textit{"2017-2037 Aviation Forecast,"} March 2017. Online source available at: https://www.faa.gov/data\_research/aviation
+
+\bibitem{pwing}
+M. McFarland, \textit{"Google drones will deliver chipotle burritos at Virginia Tech,"} CNN Money, September 2016. Online source available at: http://money.cnn.com/2016/09/08/technology/google-drone-chipotle-burrito/index.html
+
+\bibitem{primeair}
+Amazon, \textit{Amazon prime air}, 2016. Online source available at: https://www.amazon.com/Amazon-Prime-Air/b?node=8037720011
+
+\bibitem{iraqaccident}
+Siobhan Gorman,  Yochi J. Dreazen and August Cole, Wall Street Journal, \textit{"Insurgents Hack U.S. Drones,"} December 2009. Online source available at: https://www.wsj.com/articles/SB126102247889095011
+
+\bibitem{lockheedaccident}
+CNN Wire Staff, CNN, \textit{"Obama says U.S. has asked Iran to return drone aircraft,"} December 2011. Online source available at: http://edition.cnn.com/2011/12/12/world/meast/iran-us-drone/index.html
+
+\bibitem{scaneagleaccident}
+Saeed Kamali Dehghan, The Guardian, \textit{"Iran gives Russia copy of US ScanEagle drone as proof of mass production,"} October 2013. Online source available at: https://www.theguardian.com/world/2013/oct/21/iran-russia-us-scaneagle-spy-drone-production-capture
+
+\bibitem{uavvulnerabilitiesreview}
+C.G.L. Krishna and R.R. Murphy, \textit{"A review on cybersecurity vulnerabilities for unmanned aerial vehicles,"} 2017 IEEE International Symposium on Safety, Security and Rescue Robotics (SSRR), Shanghai, 2017, pp. 194-199.
+
+\bibitem{publicsafetynetworksecurity}
+D. He, S. Chan and M. Guizani, \textit{"Drone-Assisted Public Safety Networks: The Security Aspect,"} in IEEE Communications Magazine, vol. 55, no. 8, pp. 218-223, 2017.
+
+\bibitem{smartcitiesdronesecurity}
+E. Vattapparamban, İ. Güvenç, A. İ. Yurekli, K. Akkaya and S. Uluağaç, \textit{"Drones for smart cities: Issues in cybersecurity, privacy, and public safety,"} 2016 International Wireless Communications and Mobile Computing Conference (IWCMC), Paphos, 2016, pp. 216-221.
+
+\bibitem{accessvulnerabilities}
+Vemi S.G., Panchev C., \textit{"Vulnerability Testing of Wireless Access Points Using Unmanned Aerial Vehicles (UAV),"} in Proceedings of the European Conference on e-Learning, Academic Conferences and Publishing International, 2015.
+
+\bibitem{anatomyspoofing}
+S. M. Giray, \textit{"Anatomy of unmanned aerial vehicle hijacking with signal spoofing,"} 2013 6th International Conference on Recent Advances in Space Technologies (RAST), Istanbul, 2013, pp. 795-800.
+
+\bibitem{gpshijackingdetection}
+Z. Feng et al., \textit{"Efficient drone hijacking detection using onboard motion sensors,"} Design, Automation \& Test in Europe Conference \& Exhibition (2017), 2017, Lausanne, 2017, pp. 1414-1419.
+
+\bibitem{encryptedchannel}
+K. Yoon, D. Park, Y. Yim, K. Kim, S. K. Yang and M. Robinson, \textit{"Security Authentication System Using Encrypted Channel on UAV Network,"} 2017 First IEEE International Conference on Robotic Computing (IRC), Taichung, 2017, pp. 393-398.
+
+\bibitem{powercryptoprocessors}
+A. Shoufan, H. Alnoon and J. Baek, \textit{"On the power consumption of cryptographic processors in civil microdrones,"} 2015 International Conference on Information Systems Security and Privacy (ICISSP), Angers, 2015, pp. 283-290.
+
+\bibitem{dosardrone}
+G. Vasconcelos, G. Carrijo, R. Miani, J. Souza and V. Guizilini, \textit{"The Impact of DoS Attacks on the AR.Drone 2.0,"} 2016 XIII Latin American Robotics Symposium and IV Brazilian Robotics Symposium (LARS/SBR), Recife, 2016, pp. 127-132.
+
+\bibitem{ardrone}
+Parrot, AR.Drone 2.0. Online source available at: https://www.parrot.com/global/drones/parrot-ardrone-20-elite-edition\#parrot-ardrone-20-elite-edition
+
+\bibitem{bebop}
+Parrot, Bebop Drone. Online source available at: http://global.parrot.com/au/products/bebop-drone
+
+\bibitem{uavcommonsecurityattacks}
+M. Hooper et al., \textit{"Securing commercial WiFi-based UAVs from common security attacks,"} MILCOM 2016 - 2016 IEEE Military Communications Conference, Baltimore, MD, 2016, pp. 1213-1218.
+
+\bibitem{exploringuavvulnerabilities}
+N. M. Rodday, R. d. O. Schmidt and A. Pras,\textit{ "Exploring security vulnerabilities of unmanned aerial vehicles,"} NOMS 2016 - 2016 IEEE/IFIP Network Operations and Management Symposium, Istanbul, 2016, pp. 993-994.
+
+\bibitem{skynet}
+Reed Theodore, Geis Joseph and Dietrich Sven., \textit{"SkyNET: A 3G-Enabled Mobile Attack Drone and Stealth Botmaster,"} 2011, pp. 28-36.
+
+\bibitem{phantomvision}
+DJI, Phantom 2 Vision Drone. Online source available at: https://www.dji.com/phantom-2-vision
+
+\bibitem{solodrone}
+3D Robotics, Solo Drone. Online source available at: https://3dr.com/solo-drone
+
+\bibitem{wifipineapple}
+Darren Kitchen and Sebastian Kinne, Wi-Fi Pineapple. Online source available at: https://www.wifipineapple.com
+
+\bibitem{uavexploitation}
+K. Hartmann and K. Giles, \textit{"UAV exploitation: A new domain for cyber power,"} 2016 8th International Conference on Cyber Conflict (CyCon), Tallinn, 2016, pp. 205-221.
+
+\bibitem{raspberrypi}
+Raspberry Pi Foundation, Raspberry Pi. Online source available at: https://www.raspberrypi.org
+
+\bibitem{navylaser}
+Jim Sciutto and Dominique van Heerden, CNN, \textit{"Exclusive: CNN witnesses US Navy's drone-killing laser,"} July 2017. Online source available at: https://edition.cnn.com/2017/07/17/politics/us-navy-drone-laser-weapon/index.html
+
+\bibitem{dronenet}
+Keith Wagstaff, NBC, \textit{"Drone Shoots Net to Safely Capture Rogue Drones,"} January 2016. Online source available at: https://www.nbcnews.com/tech/innovation/drone-shoots-net-safely-capture-rogue-drones-n494881
+
+\bibitem{droneeagles}
+Tyler Essary, Time, \textit{"These Drone-Hunting Eagles Aren't Messing Around,"} February 2017. Online source available at: http://time.com/4675164/drone-hunting-eagles
+
+\bibitem{snoopy}
+Glenn Wilkinson, Snoopy Drone software. Online source available at: https://github.com/sensepost/Snoopy
+
+\bibitem{aircrackng}
+Thomas d'Otreppe de Bouvette, aircrack-ng. Online source available at: http://www.aircrack-ng.org
+
+\bibitem{skyjack}
+Samy Kamkar, SkyJack. Online source available at: https://samy.pl/skyjack
+
+\bibitem{loic}
+Praetox Technologies and Jorge Oliveira, Low Orbit Ionic Cannon. Online source available at: https://github.com/NewEraCracker/LOIC
+
+\bibitem{netwox}
+Laurent Constantin, Netwox. Online source available at: http://www.laurentconstantin.com/en/netw/netwox
+
+\bibitem{hping3}
+Salvatore Sanfilippo, Hping3. Online source available at: http://www.hping.org
+
+\bibitem{stealthyrop}
+J. Habibi, A. Gupta, S. Carlsony, A. Panicker and E. Bertino, \textit{"MAVR: Code Reuse Stealthy Attacks and Mitigation on Unmanned Aerial Vehicles,"} 2015 IEEE 35th International Conference on Distributed Computing Systems, Columbus, OH, 2015, pp. 642-652.
+
+\bibitem{ardupilot}
+Ardupilot Community, APM Multiplatform Autopilot. Online source available at: http://ardupilot.com
+
+\bibitem{nodeardrone}
+Felix Geisendörfer, node-ar-drone. Online source available at: https://github.com/felixge/node-ar-drone
+
+
+\end{thebibliography}
+
+\end{document}
